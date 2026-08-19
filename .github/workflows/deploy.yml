@@ -34,9 +34,9 @@ jobs:
           New-Item -ItemType Directory -Force -Path $backupFolder
 
           # 3. Copy files to backup folder (History)
-          Copy-Item -Path "index.html" -Destination $backupFolder -Force
+          Copy-Item -Path "index.html", "products.json" -Destination $backupFolder -Force
 
           # 4. Copy files to the live folder (Deployment)
-          Copy-Item -Path "index.html" -Destination $liveFolder -Force
+          Copy-Item -Path "index.html", "products.json" -Destination $liveFolder -Force
 
           Write-Host "Success: Deployed index.html to $liveFolder!"

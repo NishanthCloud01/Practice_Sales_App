@@ -1,14 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>My Live App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Live Store - Exclusive Deals</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
 </head>
 
-<body style="font-family: Arial; text-align: center; margin-top: 100px;">
-    <h1 id="header">Hello Bala, Welcome to the Live App</h1>
-    <h2>What You Want to do next?</h2>
-    <p>This site is live on our Windows server!</p>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col antialiased">
+
+    <!-- Navigation Header -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div
+                    class="h-8 w-8 rounded-lg bg-indigo-500 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/30">
+                    S</div>
+                <span class="font-bold text-lg tracking-wide text-white">NovaStore</span>
+            </div>
+
+            <!-- Mandatory Playwright Test Header Target -->
+            <h1 id="header"
+                class="text-sm md:text-base font-semibold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                Hello Bala, Welcome to the Live App
+            </h1>
+
+            <div class="flex items-center gap-4">
+                <span
+                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    Live on Windows Server
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-12 flex-1 w-full">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-3">Flash Sale Event</h2>
+            <p class="text-slate-400 text-sm md:text-base">Explore premium hardware and gear curated exclusively for
+                your live environment.</p>
+        </div>
+
+        <!-- Dynamic Product Grid -->
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Cards render here dynamically via JavaScript -->
+        </div>
+    </main>
+
+    <!-- Script to Load Products (Handles local file:// protocol seamlessly) -->
+    <script>
+        const fallbackProducts = [
+            { id: 1, name: "Wireless Noise-Canceling Headphones", category: "Audio", originalPrice: "$199.99", salePrice: "$129.99", badge: "35% OFF", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=80" },
+            { id: 2, name: "Minimalist Smart Watch Series 5", category: "Wearables", originalPrice: "$249.99", salePrice: "$179.99", badge: "HOT DEAL", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=80" },
+            { id: 3, name: "Ergonomic Mechanical Keyboard", category: "Accessories", originalPrice: "$119.99", salePrice: "$79.99", badge: "LIMITED", image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&auto=format&fit=crop&q=80" },
+            { id: 4, name: "Ultra-HD 4K Action Camera", category: "Cameras", originalPrice: "$299.99", salePrice: "$219.99", badge: "BESTSELLER", image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=500&auto=format&fit=crop&q=80" }
+        ];
+
+        function renderProducts(items) {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = items.map(item => `
+                <div class="group bg-slate-800/60 rounded-2xl p-4 border border-slate-700/50 hover:border-indigo-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/10 flex flex-col justify-between">
+                    <div>
+                        <div class="relative aspect-square rounded-xl overflow-hidden bg-slate-900 mb-4">
+                            <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <span class="absolute top-3 left-3 bg-indigo-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-md">
+                                ${item.badge}
+                            </span>
+                        </div>
+                        <span class="text-xs font-medium text-indigo-400 uppercase tracking-wider">${item.category}</span>
+                        <h3 class="text-base font-semibold text-white mt-1 group-hover:text-indigo-300 transition-colors">${item.name}</h3>
+                    </div>
+                    <div class="mt-6 flex items-center justify-between pt-4 border-t border-slate-700/40">
+                        <div>
+                            <span class="text-xs text-slate-400 line-through block">${item.originalPrice}</span>
+                            <span class="text-lg font-bold text-white">${item.salePrice}</span>
+                        </div>
+                        <button class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
+                            Buy Now
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Try fetching external JSON; fall back to embedded array if loaded directly via file:// protocol
+        fetch('./products.json')
+            .then(res => res.json())
+            .then(data => renderProducts(data))
+            .catch(() => renderProducts(fallbackProducts));
+    </script>
 </body>
 
 </html>
