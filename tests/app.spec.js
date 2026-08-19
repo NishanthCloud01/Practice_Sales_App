@@ -9,5 +9,5 @@ test("Check home page text", async ({ page }) => {
   // Check that the header text is correct
   const header = page.locator("#header");
   await expect(header).toBeVisible();
-  await expect(header).toContainText("Welcome to my Live App");
+  await expect(header).toContainText("Hi Nishanth Welcome to My Live App");
 });
