@@ -1,0 +1,42 @@
+name: Local Simulation CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-and-deploy:
+    name: Run Tests & Deploy Locally
+    runs-on: self-hosted
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          npm install
+
+      - name: Execute Playwright Tests
+        run: |
+          npm run test:e2e
+
+      - name: Copy Files to Live Folder (Windows Explorer)
+        shell: powershell
+        run: |
+          # 1. Define folder paths on your C: drive
+          $liveFolder = "C:\practice-site-live"
+          $backupFolder = "C:\practice-site-backups\Release_$(Get-Date -Format 'yyyy-MM-dd_HH-mm-ss')"
+
+          # 2. Create the folders if they don't exist
+          New-Item -ItemType Directory -Force -Path $liveFolder
+          New-Item -ItemType Directory -Force -Path $backupFolder
+
+          # 3. Copy files to backup folder (History)
+          Copy-Item -Path "index.html" -Destination $backupFolder -Force
+
+          # 4. Copy files to the live folder (Deployment)
+          Copy-Item -Path "index.html" -Destination $liveFolder -Force
+
+          Write-Host "Success: Deployed index.html to $liveFolder!"
