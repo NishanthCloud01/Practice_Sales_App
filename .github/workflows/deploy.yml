@@ -1,9 +1,16 @@
 name: Local Simulation CI/CD
 
 on:
-  push:
-    branches:
-      - main
+  # AUTO-TRIGGER IS DISABLED.
+  # To run the workflow manually:
+  #   Go to GitHub → Actions tab → Select this workflow → Click "Run workflow"
+  workflow_dispatch:
+
+  # TO RE-ENABLE AUTO-TRIGGER ON PUSH:
+  # Uncomment the 4 lines below and delete the 'workflow_dispatch' line above
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   test-and-deploy:
